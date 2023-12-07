@@ -1,21 +1,20 @@
 package year2023.day01
 
-import java.util.HashSet
-import readInput
+import year2023.solveIt
 
 
 fun main() {
     val day = "01"
-    val expectedTest1 = 142
-    val expectedTest2 = 281
+    val expectedTest1 = 142L
+    val expectedTest2 = 281L
 
 
-    fun part1(input: List<String>): Int {
-        return input.sumOf { line -> Integer.valueOf(line.first { it in '0'..'9' }.toString() + line.last { it in '0'..'9' }.toString()) }
+    fun part1(input: List<String>): Long {
+        return input.sumOf { line -> Integer.valueOf(line.first { it in '0'..'9' }.toString() + line.last { it in '0'..'9' }.toString()) }.toLong()
     }
 
 
-    fun part2(input: List<String>): Int {
+    fun part2(input: List<String>): Long {
         val possible = mapOf(
             "one" to 1,
             "two" to 2,
@@ -38,28 +37,16 @@ fun main() {
             "9" to 9
         )
         return input.map { line ->
-            println(line)
             possible.map { it to line.indexOf(it.key) }.filter { it.second>=0 }.sortedBy { it.second }.first().first.value * 10 +
                     possible.map { it to line.lastIndexOf(it.key) }.filter { it.second>=0 }.sortedBy { it.second }.asReversed().first().first.value
-        }.sum()
+        }.sum().toLong()
 
 
     }
 
 
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("year2023/day$day/test")
-    val test2Input = readInput("year2023/day$day/test2")
-    val part1Test = part1(testInput)
-    check(part1Test == expectedTest1) { "expected $expectedTest1 but was $part1Test" }
+    solveIt(day, ::part1, expectedTest1, ::part2, expectedTest2, "test2")
 
-
-    val input = readInput("year2023/day$day/input")
-    println(part1(input))
-
-    val part2Test = part2(test2Input)
-    check(part2Test == expectedTest2) { "expected $expectedTest2 but was $part2Test" }
-    println(part2(input))
 }
 
 

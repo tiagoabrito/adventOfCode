@@ -1,13 +1,12 @@
 package year2023.day03
 
-import readInput
+import year2023.solveIt
 
 fun main() {
     val day = "03"
 
-    val expectedTest1 = 4361
-    val expected = 527364
-    val expectedTest2 = 467835
+    val expectedTest1 = 4361L
+    val expectedTest2 = 467835L
 
     data class Piece(val l:Int, val c:Int, val len:Int, val id:Int)
 
@@ -22,7 +21,7 @@ fun main() {
         }
     }
 
-    fun part1(input: List<String>): Int {
+    fun part1(input: List<String>): Long {
         val parts = getParts(input)
         val mapIndexed = parts.filter { partNumber ->
             input.subList(maxOf(0, partNumber.l - 1), minOf(input.size, partNumber.l + 2)).flatMap { l ->
@@ -31,11 +30,11 @@ fun main() {
                     ).toList()
                 }.any { c -> !c.isDigit() && c != '.' }
         }.map { it.id }
-        return mapIndexed.sum()
+        return mapIndexed.sum().toLong()
     }
 
 
-    fun part2(input: List<String>): Int {
+    fun part2(input: List<String>): Long {
         val parts = getParts(input)
         val asterisks = input.flatMapIndexed { l, line ->
             line.mapIndexedNotNull { c, v ->
@@ -47,23 +46,10 @@ fun main() {
         }
         return asterisks.map { a ->
             parts.filter { it.l in (a.first - 1)..(a.first + 1) }.filter { it.c in (a.second - it.len)..(a.second + 1) }
-        }.filter { it.size == 2 }.sumOf { it[0].id * it[1].id }
+        }.filter { it.size == 2 }.sumOf { it[0].id * it[1].id }.toLong()
     }
 
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("year2023/day$day/test")
-    val part1Test = part1(testInput)
-    check(part1Test == expectedTest1) { "expected $expectedTest1 but was $part1Test" }
-
-    val input = readInput("year2023/day$day/input")
-    val message = part1(input)
-    println(message)
-    println(message - expected)
-    check(message == expected) { "expected $expected but was $message" }
-
-    val part2Test = part2(testInput)
-    check(part2Test == expectedTest2) { "expected $expectedTest2 but was $part2Test" }
-    println(part2(input))
+    solveIt(day, ::part1, expectedTest1, ::part2, expectedTest2, "test")
 }
 
 

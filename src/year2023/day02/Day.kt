@@ -1,14 +1,14 @@
 package year2023.day02
 
-import readInput
+import year2023.solveIt
 
 
 fun main() {
     val day = "02"
     fun i(index: Int) = index
 
-    val expectedTest1 = 8
-    val expectedTest2 = 2286
+    val expectedTest1 = 8L
+    val expectedTest2 = 2286L
 
     val minimum = mapOf("red" to 12, "green" to 13, "blue" to 14)
 
@@ -23,11 +23,11 @@ fun main() {
         return map
     }
 
-    fun part1(input: List<String>): Int {
+    fun part1(input: List<String>): Long {
         return input.mapIndexedNotNull { index, s -> when(canPlay(s)){
             true -> index +1
             false-> null
-        } }.sum()
+        } }.sum().toLong()
     }
 
 
@@ -41,23 +41,12 @@ fun main() {
         return flatMap.values.filterNotNull().reduceRight{a,b -> a*b}
     }
 
-    fun part2(input: List<String>): Int {
-        return input.sumOf { cubes(it) }
+    fun part2(input: List<String>): Long {
+        return input.sumOf { cubes(it) }.toLong()
     }
 
 
-    // test if implementation meets criteria from the description, like:
-    val testInput = readInput("year2023/day$day/test")
-    val part1Test = part1(testInput)
-    check(part1Test == expectedTest1) { "expected $expectedTest1 but was $part1Test" }
-
-
-    val input = readInput("year2023/day$day/input")
-    println(part1(input))
-
-    val part2Test = part2(testInput)
-    check(part2Test == expectedTest2) { "expected $expectedTest2 but was $part2Test" }
-    println(part2(input))
+    solveIt(day, ::part1, expectedTest1, ::part2, expectedTest2, "test")
 }
 
 
