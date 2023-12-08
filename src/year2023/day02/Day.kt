@@ -46,7 +46,7 @@ fun main() {
     }
 
 
-    solveIt(day, ::part1, expectedTest1, ::part2, expectedTest2, "test")
+    solveIt(day, ::part1, expectedTest1, ::part2, expectedTest2)
 }
 
 

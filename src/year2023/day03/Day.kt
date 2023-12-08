@@ -49,7 +49,7 @@ fun main() {
         }.filter { it.size == 2 }.sumOf { it[0].id * it[1].id }.toLong()
     }
 
-    solveIt(day, ::part1, expectedTest1, ::part2, expectedTest2, "test")
+    solveIt(day, ::part1, expectedTest1, ::part2, expectedTest2)
 }
 
 
