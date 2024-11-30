@@ -60,8 +60,8 @@ fun main() {
         while (true) {
             actual = priorityQueue.remove()
             if (actual.current == destination && (
-                        actual.moves.takeLast(min).map { it.x }.distinct().count() == 1 ||
-                        actual.moves.takeLast(min).map { it.y }.distinct().count() == 1)) {
+                        actual.moves.takeLast(min+1).map { it.x }.distinct().count() == 1 ||
+                        actual.moves.takeLast(min+1).map { it.y }.distinct().count() == 1)) {
                 break
             }
             val pos = actual.current
@@ -92,7 +92,7 @@ fun main() {
     }
 
     fun part2(input: List<String>): Long {
-        val actual = getShortestPath(input, 4, 10)
+        val actual = getShortestPath(input, 4, 11)
 
         return actual.heat
     }
