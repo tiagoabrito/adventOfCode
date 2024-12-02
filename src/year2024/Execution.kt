@@ -3,7 +3,7 @@ package year2024
 import java.time.Duration
 import readInput
 
-fun solveIt(day: String, part1: (List<String>) -> Long, expectedTest1: Long, part2: (List<String>) -> Long, expectedTest2: Long, test2File: String = "test") {
+fun <T>solveIt(day: String, part1: (List<String>) -> T, expectedTest1: T, part2: (List<String>) -> T, expectedTest2: T, test2File: String = "test") {
     // test if implementation meets criteria from the description, like:
     val testInput = readInput("year2024/day$day/test")
     val test2Input = readInput("year2024/day$day/$test2File")
