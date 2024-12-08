@@ -19,7 +19,7 @@ fun main() {
     }
 
     fun part2(input: List<String>): Long {
-        val enabledMultiplications = input.map { removeDisabled(it) }
+        val enabledMultiplications = listOf(removeDisabled(input.joinToString(separator = "")))
         return part1(enabledMultiplications)
     }
 
