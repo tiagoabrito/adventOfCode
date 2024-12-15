@@ -6,81 +6,41 @@ import year2024.solveIt
 fun main() {
     val day = "13"
 
-    val expectedTest1 = 709L
-    val expectedTest2 = 1400L
+    val expectedTest1 = 480L
+    val expectedTest2 = 875318608908L
 
-    fun getReflections(lines: List<String>): List<Int> {
-        val repeated = lines.zipWithNext().mapIndexedNotNull { index, pair -> if (pair.first == pair.second) index else null }
-        val map = repeated.map { r -> r to ((0 until r).map { it to r + (r - it) + 1 }.filter { it.second < lines.size }) }
-        return map.filter { possible -> possible.second.all { lines[it.first] == lines[it.second] } }.map { it.first }
+    val possibleValues: List<Pair<Int, Int>> = (0..100).flatMap { a -> (0..100).map { a to it } }
+
+    fun getMinimumCostToWin(xa:Int, ya:Int, xb:Int, yb:Int, prizeX: Int, prizeY:Int): Int {
+        return possibleValues
+          .filter { (a, b) ->
+            ((a * xa) + (b * xb) == prizeX) &&
+                    ((a * ya + b * yb) == prizeY) }.minOfOrNull { (a, b) -> 3 * a + 1 * b }?:0
     }
 
-    fun getColumnReflection(map: List<String>, original: Int = -1): Int? {
-        if(map == listOf(
-                "#..####.##.##",
-        ".##.##.####.#",
-        "#######.##.##",
-        "####.........",
-        "#..##..####..",
-        "....##.#..#.#",
-        ".##..#.####.#",
-        "....#.#....#.",
-        ".....##....##",
-        ".##.##.#..#.#",
-        "#..##..#..#..",
-        "####.######.#",
-        ".....#.####.#",
-        ".##.##......#",
-        "#..##........"
-        )){
-            println()
-        }
-        val transpose = map[0].indices.map { idx -> map.map { l -> l[idx] }.joinToString("") }
-        val filter = getReflections(transpose)
-        return filter.map { it.inc() }.firstOrNull { it != original }
-    }
-
-    fun getRowReflection(lines: List<String>, original: Int = -1): Int? {
-        val filter = getReflections(lines)
-        return filter.map { it.inc() }.firstOrNull { it != original }
-    }
+    fun getGamePlays(input: List<String>) =
+        input.flatMap { line -> line.split(",").map { lp -> lp.filter { it.isDigit() } }.filterNot { it.isEmpty() }.map { it.toInt() } }.chunked(6)
 
     fun part1(input: List<String>): Long {
-        val items = input.joinToString("\n").split("\n\n").map { it.split("\n") }
-
-
-        val map = items.map { (getColumnReflection(it) ?: (getRowReflection(it)?.let { r -> r * 100 } ?: 0)).toLong() }
-        return map.sum()
+        return getGamePlays(input).sumOf { getMinimumCostToWin(it[0], it[1], it[2], it[3], it[4], it[5]) }.toLong()
     }
 
-    fun possibleSmugs(it: List<String>): Sequence<List<String>> = sequence {
-        for (i in it.indices) {
-            for (j in it[i].indices) {
-                val changedChar = when (it[i][j]) {
-                    '#' -> '.'
-                    else -> '#'
-                }
-                val changedLine = it[i].substring(0, j) + changedChar + it[i].substring(j + 1, it[i].length)
-                val value = it.subList(0, i) + changedLine + it.subList(i + 1, it.size)
-                yield(value)
-            }
+
+    fun getMinimumCostToWin(xa: Int, ya: Int, xb: Int, yb: Int, prizeX: Long, prizeY: Long): Long {
+        val a = (prizeY * xb - prizeX * yb) / (ya * xb - xa * yb)
+        val b = (prizeX * ya - prizeY * xa) / (ya * xb - xa * yb)
+
+        if (a >= 0 && b >= 0 && (a * xa + b * xb == prizeX) && (a * ya + b * yb == prizeY)) {
+            return 3 * a + b
         }
+
+        return 0
     }
+
 
     fun part2(input: List<String>): Long {
-        val items = input.joinToString("\n").split("\n\n").map { it.split("\n") }
-
-        return items.mapNotNull { l ->
-            l.forEach { println(it) }
-            val original = getColumnReflection(l) ?: getRowReflection(l)?.let { r -> r * 100 } ?: -1
-            val firstOrNull = possibleSmugs(l)
-                .mapNotNull { s -> getColumnReflection(s, original) ?: getRowReflection(s, original / 100)?.let { r -> r * 100 } }
-                .filter { it != original }
-                .firstOrNull()
-            println(firstOrNull)
-            println()
-            firstOrNull
-        }.sum().toLong()
+        val conversionError = 10000000000000
+        return getGamePlays(input).sumOf { getMinimumCostToWin(it[0], it[1], it[2], it[3], conversionError + it[4], conversionError + it[5]) }.toLong()
     }
 
     solveIt(day, ::part1, expectedTest1, ::part2, expectedTest2, "test")
